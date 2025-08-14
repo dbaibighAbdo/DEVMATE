@@ -1,8 +1,12 @@
 from langgraph.graph import create_react_agent
 from langgraph.tools import Tool
+from pydantic import BaseModel, Field
+from typing import List, Optional
 
-
-
+class ReactAgentState(BaseModel):
+    """
+    State for the React agent that can perform various tasks based on user needs.
+    """
 
 react_agent_prompt = """
     You are a highly interactive and intelligent coding assistant.
@@ -44,6 +48,8 @@ Important Rules:
 react_agent = create_react_agent(
     name="react_agent",
     description="A React agent that can perform various tasks based on user needs.",
+    llm="gpt-4",
     tools=[],
-    prompt= react_agent_prompt
+    prompt= react_agent_prompt,
+    state_class=ReactAgentState
 )
