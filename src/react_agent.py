@@ -1,4 +1,4 @@
-from langgraph.graph import create_react_agent
+from langgraph.graph import create_react_agent, StateGraph, START, END
 from langgraph.tools import Tool
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -53,3 +53,10 @@ react_agent = create_react_agent(
     prompt= react_agent_prompt,
     state_class=ReactAgentState
 )
+
+graph = StateGraph(ReactAgentState)
+
+graph.add_node("react_agent", react_agent)
+graph.set_entry_point("react_agent")
+
+react_agent = graph.compile(name="react_agent")
