@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
-from langgraph.graph import MessagesState, StateGraph, START, END
+from langgraph.graph import MessagesState
+from langgraph.prebuilt import create_react_agent, ToolNode
+from langchain_core.tools import tool
 
 class Repository(BaseModel):
     id: int = Field(description="The unique identifier of the repository.")
@@ -22,35 +24,54 @@ class SearchGithubAgentState(MessagesState):
     repos: List[Repository] = Field(description="List of repositories retrieved from GitHub based on the search queries.")
 
 
-def generate_search_queries(state):
-    """
-    Function to generate search queries based on the project description.
-    """
-    pass
 
-def get_repos(state):
+
+search_github_agent_prompt = """
+You are a github searcher agent that helps the supervisor search for repositories on GitHub based on their project description.
+
+Your tasks include:
+1. Analyzing the project description provided by the supervisor.
+2. Generating a well-structured search query for GitHub.
+3. Retrieving first 5 (5 as a maximum) repositories from GitHub based on the search query using {get_repositories_tool}.
+4. If no repositories are found, generate a new search query and repeat the process 2 times maximum.
+5. If no repositories are found after 3 attempts, inform the supervisor that no relevant repositories were found.
+
+General Guidelines:
+- Always clarify user requests before proceeding with actions.
+- Think step-by-step before acting.
+- When generating a search query, ensure it is relevant to the project description.
+- Use the {get_repositories_tool} to retrieve repositories based on the generated search query.
+- Present the retrieved repositories in a clear and structured format.
+- Use markdown formatting for better readability, but ensure the content remains factual and relevant to the supervisor's request.
+
+The repositories should be presented like this:
+    1. **Repository Name**: [repo_name](repo_url)
+        - **Owner**: repo_owner
+        - **Description**: repo_description
+        - **Stars**: repo_stars
+        - **Forks**: repo_forks
+        - **Open Issues**: repo_open_issues
+        - **Created At**: repo_created_at
+        - **Updated At**: repo_updated_at
+
+
+"""
+
+
+@tool
+def get_repositories(state):
     """
     Tool function to retrieve GitHub repositories based on the search queries.
     """
     pass
 
-def summarize_repos_info(state):
-    """
-    Function to summarize the information of the retrieved repositories.
-    """
-    pass
+get_repositories_tool = ToolNode(name="get_repositories", func=get_repositories)
 
-
-
-graph = StateGraph(SearchGithubAgentState)
-
-graph.add_node("generate_search_queries", generate_search_queries)
-graph.add_node("get_repos", get_repos)
-graph.add_node("summarize_repos_info", summarize_repos_info)
-
-graph.add_edge(START, "generate_search_queries")
-graph.add_edge("generate_search_queries", "get_repos")
-graph.add_edge("get_repos", "summarize_repos_info")
-graph.add_edge("summarize_repos_info", END)
-
-search_github_agent = graph.compile(name="search_github_agent")
+search_github_agent = create_react_agent(
+    name="search_github_agent",
+    description="A GitHub search agent that helps the supervisor search for repositories based on project description.",
+    llm="gpt-4",
+    tools=[get_repositories_tool],
+    prompt=search_github_agent_prompt,
+    state_class=SearchGithubAgentState
+).compile(name="search_github_agent")

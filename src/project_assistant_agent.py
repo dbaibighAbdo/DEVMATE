@@ -30,7 +30,7 @@ project_assistant_agent_prompt = """
     General Guidelines:
         - Always clarify user requests before proceeding with actions.
         - Think step-by-step before acting.
-        - When a repository URL is given to you from the supervisor use the {download_zipped_repo} tool to download repositories.
+        - When a repository URL is given to you from the supervisor use the {download_zipped_repo_tool} tool to download repositories.
         - Analyze the downloaded repository content to provide insights and suggestions.
         - When assisting in project development, focus on the repository's structure, files, and relevant code.
         - If the user requests debugging or optimization, provide clear, actionable steps based on the repository content. 
