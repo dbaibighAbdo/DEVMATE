@@ -63,7 +63,9 @@ supervisor_agent = create_supervisor(
     model = init_chat_model(model_name="gpt-4"),
     prompt = supervisor_agent_prompt,
     agents=[search_github_agent, project_assistant_agent],
-    state_class=ReactAgentState,
-    name="supervisor_agent",
-    description="A supervisor agent that orchestrates the work between search_github_agent and project_assistant_agent.",
+    name="supervisor_agent"
 )
+
+from IPython.display import display, Image
+
+display(Image(supervisor_agent.get_graph().draw_mermaid_png(), width=800, height=600))

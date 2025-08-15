@@ -1,4 +1,5 @@
 langgraph
+langgraph-supervisor
 langchain
 langchain-core
 langchain-community

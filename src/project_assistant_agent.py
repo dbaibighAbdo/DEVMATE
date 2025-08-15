@@ -70,13 +70,11 @@ def download_zipped_repo(state):
     """
     pass
 
-download_zipped_repo_tool = ToolNode(name="download_zipped_repo", func=download_zipped_repo)
+download_zipped_repo_tool = ToolNode([download_zipped_repo])
 
 project_assistant_agent = create_react_agent(
     name="project_assistant_agent",
-    description="A project assistant agent that can analyze repositories and assist in project building.",
     model="gpt-4o",
     tools=[download_zipped_repo_tool],
-    prompt=project_assistant_agent_prompt,
-    state_class=ProjectAnalysisAgentState
+    prompt=project_assistant_agent_prompt
 ).compile(name="project_assistant_agent")

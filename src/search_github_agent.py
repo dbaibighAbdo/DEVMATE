@@ -70,13 +70,11 @@ def get_repositories(state):
     """
     pass
 
-get_repositories_tool = ToolNode(name="get_repositories", func=get_repositories)
+get_repositories_tool = ToolNode([get_repositories])
 
 search_github_agent = create_react_agent(
     name="search_github_agent",
-    description="A GitHub search agent that helps the supervisor search for repositories based on project description.",
     model="gpt-4o",
     tools=[get_repositories_tool],
-    prompt=search_github_agent_prompt,
-    state_class=SearchGithubAgentState
+    prompt=search_github_agent_prompt
 ).compile(name="search_github_agent")
