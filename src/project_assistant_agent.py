@@ -3,6 +3,12 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 from langgraph.prebuilt import create_react_agent, ToolNode
 from langchain_core.tools import tool
+from langchain_openai import ChatOpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
+model = ChatOpenAI(model="gpt-4o")
 
 
 class ProjectAnalysisAgentState(MessagesState):
@@ -19,7 +25,7 @@ You will receive two types of requests from the SUPERVISOR:
 
 ### 1. When you receive a repository URL:
     - Tasks:
-        1. Download the repository using {download_zipped_repo_tool}.
+        1. Download the repository using {download_zipped_repo}.
         2. Analyze the repository’s structure, files, and key components.
         3. Provide insights and actionable suggestions for project development.
 
@@ -70,11 +76,10 @@ def download_zipped_repo(state):
     """
     pass
 
-download_zipped_repo_tool = ToolNode([download_zipped_repo])
 
 project_assistant_agent = create_react_agent(
     name="project_assistant_agent",
-    model="gpt-4o",
-    tools=[download_zipped_repo_tool],
-    prompt=project_assistant_agent_prompt
-).compile(name="project_assistant_agent")
+    model=model,
+    tools=[download_zipped_repo],
+    prompt=project_assistant_agent_prompt,
+)

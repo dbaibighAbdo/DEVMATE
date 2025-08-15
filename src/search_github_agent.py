@@ -1,8 +1,14 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from langgraph.graph import MessagesState
-from langgraph.prebuilt import create_react_agent, ToolNode
+from langgraph.prebuilt import create_react_agent
 from langchain_core.tools import tool
+from langchain_openai import ChatOpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
+model = ChatOpenAI(model="gpt-4o")
 
 class Repository(BaseModel):
     id: int = Field(description="The unique identifier of the repository.")
@@ -31,7 +37,7 @@ You are the `search_github_agent`. Your role is to assist the SUPERVISOR by find
 TASKS:
     1. Analyze the project description given by the SUPERVISOR.
     2. Create a precise, relevant, and effective search query for GitHub.
-    3. Use {get_repositories_tool} to retrieve up to 5 repositories (maximum).
+    3. Use {get_repositories} to retrieve up to 5 repositories (maximum).
     4. If no repositories are found:
         - Refine the search query and retry (maximum of 2 additional attempts).
     5. If after 3 total attempts no repositories are found:
@@ -41,7 +47,7 @@ GENERAL GUIDELINES:
     - Always think step-by-step before acting.
     - The search query must be closely aligned with the project description.
     - Clarify unclear requests before proceeding.
-    - Present results exactly as returned by {get_repositories_tool} without altering factual data.
+    - Present results exactly as returned by {get_repositories} without altering factual data.
     - Always use Markdown for readability.
     - Keep descriptions factual, relevant, and concise.
 
@@ -70,11 +76,10 @@ def get_repositories(state):
     """
     pass
 
-get_repositories_tool = ToolNode([get_repositories])
 
 search_github_agent = create_react_agent(
     name="search_github_agent",
-    model="gpt-4o",
-    tools=[get_repositories_tool],
+    model=model,
+    tools=[get_repositories],
     prompt=search_github_agent_prompt
-).compile(name="search_github_agent")
+)

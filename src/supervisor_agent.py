@@ -3,7 +3,12 @@ from langchain.chat_models import init_chat_model
 from project_assistant_agent import project_assistant_agent
 from search_github_agent import search_github_agent
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from langchain_openai import ChatOpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
+model = ChatOpenAI(model="gpt-4o")
 
 class ReactAgentState(BaseModel):
     """
@@ -60,12 +65,13 @@ IMPORTANT RULES:
 
 # Create the supervisor agent with the defined prompt and tools
 supervisor_agent = create_supervisor(
-    model = init_chat_model(model_name="gpt-4"),
+    model = model,
     prompt = supervisor_agent_prompt,
     agents=[search_github_agent, project_assistant_agent],
-    name="supervisor_agent"
-)
+    add_handoff_back_messages=True,
+    output_mode="full_history"
+).compile(name="supervisor_agent")
 
 from IPython.display import display, Image
 
-display(Image(supervisor_agent.get_graph().draw_mermaid_png(), width=800, height=600))
+display(Image(supervisor_agent.get_graph().draw_mermaid_png()))
