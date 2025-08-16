@@ -69,7 +69,8 @@ supervisor_agent = create_supervisor(
     prompt = supervisor_agent_prompt,
     agents=[search_github_agent, project_assistant_agent],
     add_handoff_back_messages=True,
-    output_mode="full_history"
+    output_mode="full_history",
+    parallel_tool_calls=False
 ).compile(name="supervisor_agent")
 
 from IPython.display import display, Image
