@@ -64,7 +64,3 @@ supervisor_agent = create_supervisor(
     output_mode="full_history",
     parallel_tool_calls=False
 ).compile(name="supervisor_agent")
-
-from IPython.display import display, Image
-
-display(Image(supervisor_agent.get_graph().draw_mermaid_png()))

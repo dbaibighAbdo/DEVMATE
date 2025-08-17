@@ -4,7 +4,7 @@ from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 import httpx
 
-load_dotenv("OPENAI_API_KEY", "HEADERS")
+load_dotenv()
 
 model = ChatOpenAI(model="gpt-4o")
 
@@ -65,7 +65,7 @@ def get_repositories(search_query: str) -> dict:
     params = {"q": query, "sort": "stars", "order": "desc", "per_page": 5}
 
     with httpx.Client() as client:
-        response = client.get(url, params=params, headers="HEADERS")
+        response = client.get(url, params=params)
 
     if response.status_code != 200:
         raise Exception(f"GitHub API error: {response.status_code}, {response.text}")
