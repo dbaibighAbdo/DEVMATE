@@ -1,20 +1,12 @@
 from langgraph_supervisor import create_supervisor
-from langchain.chat_models import init_chat_model
 from project_assistant_agent import project_assistant_agent
 from search_github_agent import search_github_agent
-from pydantic import BaseModel, Field
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
 
 model = ChatOpenAI(model="gpt-4o")
-
-class ReactAgentState(BaseModel):
-    """
-    State for the React agent that can perform various tasks based on user needs.
-    """
-
 
 supervisor_agent_prompt = """
 You are the SUPERVISOR, responsible for orchestrating the work between two specialized agents:
