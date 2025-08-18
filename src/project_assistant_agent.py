@@ -72,7 +72,7 @@ You will receive two types of requests from the SUPERVISOR:
 
 
 @tool
-def download_zipped_repo(repo_url: str, branch: str = "main", save_path: str = "./repo.zip") -> str:
+def download_zipped_repo(repo_url: str) -> str:
     """
     Downloads a GitHub repository as a .zip file.
 
@@ -84,22 +84,35 @@ def download_zipped_repo(repo_url: str, branch: str = "main", save_path: str = "
     Returns:
         str: Path to the saved zip file.
     """
+    branch: str = "main"
+    save_path: str = "./repo.zip"
+    headers = {
+        "Authorization": "{HEADERS}",
+        "Accept": "application/vnd.github+json"
+    }
     parts = repo_url.rstrip("/").split("/")
     if len(parts) < 2:
         raise ValueError("Invalid GitHub URL. Expected format: https://github.com/owner/repo")
 
     owner, repo = parts[-2], parts[-1]
-    zip_url = f"https://github.com/{owner}/{repo}/archive/refs/heads/{branch}.zip"
+    zip_url = f"https://api.github.com/repos/{owner}/{repo}/zipball/{branch}"
 
     with httpx.Client() as client:
-        response = client.get(zip_url)
+        response = client.get(zip_url, headers=headers)
         if response.status_code != 200:
             raise Exception(f"Failed to download repo: {response.status_code}, {response.text}")
 
         with open(save_path, "wb") as f:
             f.write(response.content)
 
-    return os.path.abspath(save_path)
+        os.path.abspath(save_path)
+        with zipfile.ZipFile(save_path+"/repo.zip", "r") as zip_ref:
+            zip_ref.extractall(save_path+"repo")
+
+    # Most GitHub archives create a subfolder repo-branch/
+    extracted_dir = os.path.join(save_path+"repo", os.listdir(save_path+"repo")[0])
+    return os.path.abspath(extracted_dir)
+
 
 
 # 2️⃣ Unzip repo
@@ -125,7 +138,7 @@ def unzip_repo(zip_path: str, extract_to: str = "./repo") -> str:
 
 # 3️⃣ List files in repo
 @tool
-def list_files(folder_path: str, max_files: int = 50) -> str:
+def list_files(folder_path: str="./repo/repo", max_files: int = 50) -> str:
     """
     Lists files in a repo folder.
 
@@ -173,6 +186,6 @@ def read_file(file_path: str, max_chars: int = 5000) -> str:
 project_assistant_agent = create_react_agent(
     name="project_assistant_agent",
     model=model,
-    tools=[download_zipped_repo, unzip_repo, list_files, read_file],
+    tools=[download_zipped_repo, list_files, read_file],
     prompt=project_assistant_agent_prompt,
 )
