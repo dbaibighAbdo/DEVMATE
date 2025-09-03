@@ -52,7 +52,8 @@ The system follows a **Supervisor–Worker** pattern:
    - Produces structured, step-by-step outputs.  
 
 ----------------------------------------------------------------------------------------------------------
-![./output.png]
+![System Architecture](output.png)
+
 ----------------------------------------------------------------------------------------------------------
 
 ## 🚀 Getting Started
