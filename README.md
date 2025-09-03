@@ -62,6 +62,7 @@ Make sure you have **Python 3.11+** installed:
 
 ```bash
 python --version
+```
 
 2. Install dependencies
 Use pip to install all required packages:
