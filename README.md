@@ -51,7 +51,9 @@ The system follows a **Supervisor–Worker** pattern:
    - If no repo is provided: assists with debugging or optimizing code.  
    - Produces structured, step-by-step outputs.  
 
----
+----------------------------------------------------------------------------------------------------------
+![./output.png]
+----------------------------------------------------------------------------------------------------------
 
 ## 🚀 Getting Started
 
