@@ -3,9 +3,8 @@
 This project implements a **multi-agent system** using [LangGraph](https://github.com/langchain-ai/langgraph), designed to help users **search GitHub for repositories, analyze them, and provide coding assistance**.  
 
 The architecture is powered by a **Supervisor Agent** that coordinates specialized sub-agents:
-- 🔍 **Search GitHub Agent** – finds relevant repositories based on user requests.  
-- 🛠️ **Project Assistant Agent** – analyzes repositories, debugs, and optimizes code.  
-- 👨‍💼 **Supervisor Agent** – orchestrates the workflow, decides which agent to call, and ensures smooth execution.  
+- 🔍 **Agent (assistant)** – finds relevant repositories based on user requests, analyzes repositories, debugs, and optimizes code.  
+ 
 
 ---
 
@@ -14,7 +13,7 @@ The architecture is powered by a **Supervisor Agent** that coordinates specializ
 - 🛠️ Analyze project structure, dependencies, and code quality.  
 - ⚡ Provide debugging and optimization support (with or without a repository).  
 - 🧩 Modular design using LangGraph for flexibility and extensibility.  
-- 🧠 Supervisor-driven orchestration for adaptive task management.  
+- 🧠 LangGraph orchestration for adaptive task management.  
 
 ---
 
@@ -32,24 +31,6 @@ The architecture is powered by a **Supervisor Agent** that coordinates specializ
 - [OpenAI API](https://platform.openai.com/) (or any LLM backend)  
 - GitHub API (for repository search & retrieval)  
 - Python **3.11+**  
-
----
-
-## 🧠 Agent Architecture
-The system follows a **Supervisor–Worker** pattern:
-
-1. **Supervisor Agent**  
-   - Receives user input.  
-   - Decides whether to trigger GitHub search or request direct code assistance.  
-
-2. **Search GitHub Agent**  
-   - Uses the GitHub API to search for repositories.  
-   - Returns the most relevant repositories with descriptions.  
-
-3. **Project Assistant Agent**  
-   - If a repo is provided: downloads & analyzes it.  
-   - If no repo is provided: assists with debugging or optimizing code.  
-   - Produces structured, step-by-step outputs.  
 
 ----------------------------------------------------------------------------------------------------------
 ![System Architecture](output.png)
