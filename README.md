@@ -3,7 +3,8 @@
 This project implements a **multi-agent system** using [LangGraph](https://github.com/langchain-ai/langgraph), designed to help users **search GitHub for repositories, analyze them, and provide coding assistance**.  
 
 The architecture is powered by a **Supervisor Agent** that coordinates specialized sub-agents:
-- 🔍 **Agent (assistant)** – finds relevant repositories based on user requests, analyzes repositories, debugs, and optimizes code.  
+- 🔍 **Agent (assistant)** – finds relevant repositories based on user requests, analyzes repositories, debugs, and optimizes code.
+- 🛠️ **Github MCP server** – mcp server with a bunch of tools to give the agent the ability to execute tasks in github.
  
 
 ---
