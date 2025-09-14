@@ -1,9 +1,10 @@
 langgraph
-langgraph-supervisor
 langchain
 langchain-core
 langchain-community
 langchain-openai
 langgraph-cli[inmem]
 dotenv-python
-pydantic
+asyncio
+mcp[cli]
+mcp-use
